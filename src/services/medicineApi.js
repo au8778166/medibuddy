@@ -9,7 +9,7 @@ export async function searchMedicines(query, signal) {
     return [];
   }
 
-  // Return cached result
+
   if (cache.has(normalizedQuery)) {
     return cache.get(normalizedQuery);
   }
@@ -23,14 +23,14 @@ export async function searchMedicines(query, signal) {
     signal,
   });
 
-  // FDA returns 404 when no matching records are found
+  
   if (response.status === 404) {
     cache.set(normalizedQuery, []);
     return [];
   }
 
   if (!response.ok) {
-    throw new Error("Failed to fetch medicine data.");
+    throw new Error("Failed to fetch medicine data");
   }
 
   const data = await response.json();

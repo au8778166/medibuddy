@@ -32,7 +32,7 @@ function MedicineCard({ medicine, index, query }) {
       role="button"
       tabIndex={0}
       onKeyDown={(event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === " ") {
           handleClick();
         }
       }}

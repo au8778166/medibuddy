@@ -1,7 +1,9 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { searchMedicines } from "../services/medicineApi";
 
 function formatValue(value) {
-  if (!value) {
+  if (!value || value.length === 0) {
     return "Not available";
   }
 
@@ -13,92 +15,103 @@ function formatValue(value) {
 }
 
 function MedicineDetail() {
-  const location = useLocation();
+  const { query, index } = useParams();
   const navigate = useNavigate();
 
-  const medicine = location.state?.medicine;
+  const [medicine, setMedicine] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  if (!medicine) {
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadMedicine() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const decodedQuery = decodeURIComponent(query);
+
+        const results = await searchMedicines(
+          decodedQuery,
+          controller.signal
+        );
+
+        const selectedMedicine = results[Number(index)];
+
+        if (!selectedMedicine) {
+          setError(
+            "Medicine information could not be found."
+          );
+          return;
+        }
+
+        setMedicine(selectedMedicine);
+      } catch (error) {
+        if (error.name === "AbortError") {
+          return;
+        }
+
+        setError(
+          "Unable to load medicine information."
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadMedicine();
+
+    return () => {
+      controller.abort();
+    };
+  }, [query, index]);
+
+  if (loading) {
     return (
-      <div className="detail-page">
-        <div className="detail-empty">
-          <h2>Medicine information unavailable</h2>
+      <main className="detail-page">
+        <div className="state-container">
+          <div className="spinner"></div>
 
-          <p>
-            This medicine was not loaded in the current session.
+          <p className="state-message">
+            Loading medicine...
           </p>
+        </div>
+      </main>
+    );
+  }
 
+  if (error || !medicine) {
+    return (
+      <main className="detail-page">
+        <div className="detail-container">
           <button
             className="back-button"
             onClick={() => navigate("/")}
           >
             ← Back to Search
           </button>
+
+          <div className="state-container">
+            <div className="state-icon error-icon">
+              !
+            </div>
+
+            <h2>Medicine unavailable</h2>
+
+            <p className="state-message">
+              {error ||
+                "Medicine information is unavailable."}
+            </p>
+          </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   const openFDA = medicine.openfda || {};
-
-  const fields = [
-    {
-      label: "Brand Name",
-      value: openFDA.brand_name,
-    },
-    {
-      label: "Generic Name",
-      value: openFDA.generic_name,
-    },
-    {
-      label: "Manufacturer",
-      value: openFDA.manufacturer_name,
-    },
-    {
-      label: "Product Type",
-      value: openFDA.product_type,
-    },
-    {
-      label: "Route",
-      value: openFDA.route,
-    },
-    {
-      label: "Application Number",
-      value: openFDA.application_number,
-    },
-    {
-      label: "Product NDC",
-      value: openFDA.product_ndc,
-    },
-    {
-      label: "Package NDC",
-      value: openFDA.package_ndc,
-    },
-    {
-      label: "Substance Name",
-      value: openFDA.substance_name,
-    },
-    {
-      label: "Pharm Classes",
-      value: openFDA.pharm_class,
-    },
-    {
-      label: "RxCUI",
-      value: openFDA.rxcui,
-    },
-    {
-      label: "UNII",
-      value: openFDA.unii,
-    },
-    {
-      label: "SPL Set ID",
-      value: openFDA.spl_set_id,
-    },
-    {
-      label: "SPL ID",
-      value: openFDA.spl_id,
-    },
-  ];
 
   return (
     <main className="detail-page">
@@ -110,8 +123,10 @@ function MedicineDetail() {
           ← Back to Search
         </button>
 
-        <div className="detail-header">
-          <span className="eyebrow">MEDICINE DETAILS</span>
+        <section className="detail-header">
+          <span className="eyebrow">
+            MEDICINE DETAILS
+          </span>
 
           <h1>
             {formatValue(openFDA.brand_name)}
@@ -120,41 +135,34 @@ function MedicineDetail() {
           <p>
             {formatValue(openFDA.generic_name)}
           </p>
-        </div>
+        </section>
 
-        <div className="details-card">
+        <section className="details-card">
           <h2>Medicine Information</h2>
 
           <div className="details-grid">
-            {fields.map((field) => (
-              <div className="detail-item" key={field.label}>
-                <span>{field.label}</span>
+            {Object.entries(openFDA).map(
+              ([key, value]) => (
+                <div
+                  className="detail-item"
+                  key={key}
+                >
+                  <span>
+                    {key
+                      .replaceAll("_", " ")
+                      .replace(/\b\w/g, (letter) =>
+                        letter.toUpperCase()
+                      )}
+                  </span>
 
-                <strong>
-                  {formatValue(field.value)}
-                </strong>
-              </div>
-            ))}
+                  <strong>
+                    {formatValue(value)}
+                  </strong>
+                </div>
+              )
+            )}
           </div>
-        </div>
-
-        <div className="raw-section">
-          <h2>Available openFDA Information</h2>
-
-          <div className="raw-grid">
-            {Object.entries(openFDA).map(([key, value]) => (
-              <div className="raw-item" key={key}>
-                <span>
-                  {key.replaceAll("_", " ")}
-                </span>
-
-                <p>
-                  {formatValue(value)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+        </section>
       </div>
     </main>
   );

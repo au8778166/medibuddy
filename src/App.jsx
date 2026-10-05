@@ -7,6 +7,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SearchPage />} />
+
         <Route
           path="/medicine/:query/:index"
           element={<MedicineDetail />}

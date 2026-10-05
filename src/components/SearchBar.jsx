@@ -6,7 +6,7 @@ function SearchBar({ value, onChange }) {
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         placeholder="Search for a medication (e.g. Advil, Tylenol)..."
         aria-label="Search for a medication"
       />

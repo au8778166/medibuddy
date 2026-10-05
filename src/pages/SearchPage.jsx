@@ -61,91 +61,89 @@ function SearchPage() {
   const hasSearched = debouncedQuery.trim().length > 0;
 
   return (
-    <div className="app-container">
-      <main className="search-page">
-        <section className="search-hero">
-          <h1>Medicine Directory</h1>
+    <main className="search-page">
+      <section className="search-hero">
+        <h1>Medicine Directory</h1>
 
-          <p>
-            Search the FDA database for drug labels,
-            indications, and active ingredients.
-          </p>
+        <p>
+          Search the FDA database for drug labels,
+          indications, and active ingredients.
+        </p>
 
-          <SearchBar
-            value={query}
-            onChange={setQuery}
-          />
-        </section>
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+        />
+      </section>
 
-        <section className="results-section">
-          {loading && (
+      <section className="results-section">
+        {loading && (
+          <div className="state-container">
+            <div className="spinner"></div>
+
+            <p className="state-message">
+              Searching medicines...
+            </p>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="state-container">
+            <div className="state-icon error-icon">
+              !
+            </div>
+
+            <h2>Something went wrong</h2>
+
+            <p className="state-message">
+              {error}
+            </p>
+          </div>
+        )}
+
+        {!loading &&
+          !error &&
+          hasSearched &&
+          medicines.length === 0 && (
             <div className="state-container">
-              <div className="spinner"></div>
+              <div className="state-icon">
+                ⌕
+              </div>
+
+              <h2>No results found</h2>
+
               <p className="state-message">
-                Searching medicines...
+                No medicines were found for "{debouncedQuery}".
               </p>
             </div>
           )}
 
-          {!loading && error && (
-            <div className="state-container">
-              <div className="state-icon error-icon">
-                !
+        {!loading &&
+          !error &&
+          medicines.length > 0 && (
+            <>
+              <div className="results-heading">
+                <h2>Search Results</h2>
+
+                <span>
+                  {medicines.length} medicines found
+                </span>
               </div>
 
-              <h2>Something went wrong</h2>
-
-              <p className="state-message">
-                {error}
-              </p>
-            </div>
+              <div className="medicine-grid">
+                {medicines.map((medicine, index) => (
+                  <MedicineCard
+                    key={`${medicine.openfda?.brand_name?.[0] || "medicine"}-${index}`}
+                    medicine={medicine}
+                    index={index}
+                    query={debouncedQuery}
+                  />
+                ))}
+              </div>
+            </>
           )}
-
-          {!loading &&
-            !error &&
-            hasSearched &&
-            medicines.length === 0 && (
-              <div className="state-container">
-                <div className="state-icon">
-                  ⌕
-                </div>
-
-                <h2>No results found</h2>
-
-                <p className="state-message">
-                  No medicines were found for "
-                  {debouncedQuery}".
-                </p>
-              </div>
-            )}
-
-          {!loading &&
-            !error &&
-            medicines.length > 0 && (
-              <>
-                <div className="results-heading">
-                  <h2>Search Results</h2>
-
-                  <span>
-                    {medicines.length} medicines found
-                  </span>
-                </div>
-
-                <div className="medicine-grid">
-                  {medicines.map((medicine, index) => (
-                    <MedicineCard
-                      key={`${medicine.openfda?.brand_name?.[0] || "medicine"}-${index}`}
-                      medicine={medicine}
-                      index={index}
-                      query={debouncedQuery}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-        </section>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
 
