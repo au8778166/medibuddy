@@ -1,0 +1,309 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  color: #172b4d;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* Search Page */
+
+.search-page {
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+.search-hero {
+  max-width: 1000px;
+  margin: auto;
+  text-align: center;
+}
+
+.search-hero h1 {
+  font-size: 48px;
+  padding-top: 0;
+  color: #07152f;
+}
+
+.search-hero > p {
+  margin-top: 20px;
+  font-size: 22px;
+  color: #3f5878;
+}
+
+/* Search Bar */
+
+.search-form {
+  max-width: 840px;
+  height: 78px;
+  margin: 60px auto 0;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #dce3ec;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px #00000008;
+}
+
+.search-icon {
+  margin-left: 25px;
+  font-size: 30px;
+  color: #8ea3c1;
+}
+
+.search-form input {
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 22px;
+}
+
+.search-form input::placeholder {
+  color: #91a4c1;
+}
+
+/* Results */
+
+.results-section {
+  max-width: 1100px;
+  margin: 60px auto;
+}
+
+.results-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.results-heading h2 {
+  font-size: 26px;
+}
+
+.results-heading span {
+  color: #667085;
+}
+
+/* Cards */
+
+.medicine-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.medicine-card {
+  padding: 24px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.medicine-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px #0000000d;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card-header h2 {
+  font-size: 20px;
+}
+
+.badge {
+  padding: 6px 10px;
+  background: #eef4ff;
+  color: #3764d8;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.medicine-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.label,
+.detail-item span {
+  display: block;
+  margin-bottom: 5px;
+  color: #98a2b3;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.medicine-info p,
+.detail-item strong {
+  color: #475467;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.view-button,
+.back-button {
+  padding: 10px 15px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #f2f4f7;
+  color: #344054;
+  font-weight: 600;
+}
+
+.view-button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* States */
+
+.state-container {
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.state-container h2 {
+  margin-bottom: 8px;
+}
+
+.state-message {
+  color: #667085;
+}
+
+.state-icon {
+  margin-bottom: 15px;
+  font-size: 30px;
+}
+
+.spinner {
+  width: 35px;
+  height: 35px;
+  border: 3px solid #ddd;
+  border-top-color: #5579ad;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Detail Page */
+
+.detail-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.detail-container {
+  max-width: 950px;
+  margin: auto;
+}
+
+.back-button {
+  margin-bottom: 30px;
+  background: white;
+}
+
+.detail-header {
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  color: #5579ad;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.detail-header h1 {
+  margin: 10px 0;
+  font-size: 45px;
+  color: #07152f;
+}
+
+.detail-header p {
+  color: #667085;
+  font-size: 18px;
+}
+
+.details-card {
+  padding: 28px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.details-card h2 {
+  margin-bottom: 20px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.detail-item {
+  padding: 18px 10px;
+  border-top: 1px solid #eaecf0;
+}
+
+
+
+@media (max-width: 700px) {
+  .search-hero h1 {
+    font-size: 36px;
+  }
+
+  .search-hero > p {
+    font-size: 18px;
+  }
+
+  .search-form {
+    height: 65px;
+    margin-top: 40px;
+  }
+
+  .search-form input {
+    font-size: 16px;
+  }
+
+  .medicine-grid,
+  .medicine-info,
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-heading {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .detail-header h1 {
+    font-size: 36px;
+  }
+}
